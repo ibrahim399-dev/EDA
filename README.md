@@ -1,0 +1,59 @@
+# EDA Assistant — AI Chatbot for Enchanted Digital Academy
+
+An intelligent chatbot that answers questions about Enchanted Digital Academy (EDA) — programs, EDSIP internships, registration, mentorship, and community — built with Streamlit.
+
+## Live data source
+Knowledge base entries are sourced directly from EDA's official website ([enchanteddigitalacademy.com.ng](https://enchanteddigitalacademy.com.ng)) and founder Francess Ekezie's public write-up on EDA's mission, so answers reflect the real organization rather than placeholder content.
+
+## Features
+- **Chat interface** with welcome message and conversation history
+- **52 knowledge base entries** across About EDA, Registration, Programs, EDSIP, Community, Career, and Bootcamps
+- **Fuzzy matching engine** (`matcher.py`) that understands varied phrasings of the same question using keyword overlap + string similarity — no API key or external LLM required
+- **Graceful unknown-question handling** — suggests related questions and provides direct contact info instead of failing silently
+- **Sidebar quick topics** for one-tap access to common questions
+- **PDF upload support** (`doc_search.py`) — upload any PDF in the sidebar and ask questions about it; the assistant falls back to the document when the knowledge base doesn't have an answer
+- **Admin dashboard** (`pages/1_Admin_Dashboard.py`) — a second page showing question volume, answer rate, categories touched, unanswered questions, answer-source breakdown, and knowledge base coverage by category
+- **Structured question logging** — every question is logged with its matched category and answer source (knowledge base / uploaded document / none), powering the dashboard
+
+## Project structure
+```
+eda-chatbot/
+├── app.py                        # Streamlit chat interface (main page)
+├── matcher.py                     # Fuzzy matching engine
+├── knowledge_base.py               # 52 EDA knowledge entries
+├── doc_search.py                    # PDF text extraction + document Q&A
+├── pages/
+│   └── 1_Admin_Dashboard.py          # Analytics dashboard (auto-appears in Streamlit sidebar nav)
+├── requirements.txt
+└── README.md
+```
+
+**Important:** the `pages/` folder must keep its exact name and sit in the same root folder as `app.py` — this is how Streamlit automatically creates the multipage navigation (you'll see both "app" and "Admin Dashboard" in the sidebar once deployed).
+
+## How to run
+
+### Option 1: Streamlit Community Cloud (recommended, matches Aegis AI setup)
+1. Push this folder to a GitHub repo
+2. Go to [share.streamlit.io](https://share.streamlit.io), connect your repo, set main file to `app.py`
+3. Deploy
+
+### Option 2: Locally / Colab
+```bash
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+## How the matching works
+Rather than requiring an LLM API key, `matcher.py` scores each user message against every knowledge base entry's canonical question **and** its list of alternate phrasings (`keywords`), using:
+- **Token overlap** — how many meaningful words match (ignoring stopwords like "the", "is", "how")
+- **Fuzzy string similarity** — catches typos and near-matches
+
+This means "How do I sign up?", "How do I register?", and "How to join EDA" all correctly route to the same registration answer, without needing paid API calls.
+
+## Extending this project
+To grow past the core requirements:
+- Swap `matcher.py` for a `sentence-transformers` embedding search for smarter semantic matching
+- Add `RetrievalQA` from LangChain + ChromaDB for true RAG over EDA's full website/PDF content
+- Add a `pages/admin.py` Streamlit page to visualize `st.session_state.unanswered_log` and `question_log` as an analytics dashboard
+- Add `streamlit-mic-recorder` + a speech-to-text API for voice input
+- 
