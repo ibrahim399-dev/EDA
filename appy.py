@@ -5,7 +5,7 @@ from matcher import find_best_match, find_top_matches
 
 st.set_page_config(
     page_title="EDA Assistant | Enchanted Digital Academy",
-    page_icon="✦",
+    page_icon="✨",
     layout="centered",
     initial_sidebar_state="expanded",
 )
@@ -85,7 +85,7 @@ if "messages" not in st.session_state:
     st.session_state.messages.append({
         "role": "assistant",
         "content": (
-            "Welcome to **Enchanted Digital Academy** ✦\n\n"
+            "Welcome to **Enchanted Digital Academy** ✨\n\n"
             "I'm your EDA Assistant — here to answer questions about our programs, "
             "EDSIP internships, registration, mentorship, and community.\n\n"
             "Ask me anything, like *\"How do I register?\"* or *\"What is EDSIP?\"*"
@@ -103,7 +103,7 @@ if "question_log" not in st.session_state:
 # SIDEBAR
 # ---------------------------------------------------------------
 with st.sidebar:
-    st.markdown("### ✦ EDA Assistant")
+    st.markdown("### ✨ EDA Assistant")
     st.caption("Africa's premier acceleration hub for Branding, PR, and Tech.")
     st.divider()
 
@@ -140,7 +140,7 @@ st.markdown("""
 # CHAT HISTORY
 # ---------------------------------------------------------------
 for msg in st.session_state.messages:
-    avatar = "✦" if msg["role"] == "assistant" else None
+    avatar = "✨" if msg["role"] == "assistant" else None
     with st.chat_message(msg["role"], avatar=avatar):
         st.markdown(msg["content"])
 
@@ -193,6 +193,6 @@ if user_input:
         "timestamp": datetime.now().strftime("%H:%M")
     })
 
-    with st.chat_message("assistant", avatar="✦"):
+    with st.chat_message("assistant", avatar="✨"):
         st.markdown(response, unsafe_allow_html=True)
   
